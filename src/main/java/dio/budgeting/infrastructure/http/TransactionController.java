@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 @RestController
-@RequestMapping("/transactions")
+@RequestMapping("/pai/v1/transactions")
 public class TransactionController {
     private final PersistTransactionUseCase persistTransactionUseCase;
     private final ListTransactionsByCategoryUseCase listTransactionsByCategoryUseCase;

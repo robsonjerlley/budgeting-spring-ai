@@ -1,0 +1,28 @@
+package dio.budgeting.infrastructure.persistence.repository;
+
+import dio.budgeting.domain.User;
+import dio.budgeting.domain.UserRepository;
+import dio.budgeting.infrastructure.persistence.entity.UserEntity;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public class JpaUserRepository implements UserRepository {
+
+    private final UserEntityRepository userEntityRepository;
+
+    public JpaUserRepository(UserEntityRepository userEntityRepository) {
+        this.userEntityRepository = userEntityRepository;
+    }
+
+    @Override
+    public User save(User user) {
+        return userEntityRepository.save(UserEntity.from(user)).toDomain();
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userEntityRepository.findByUsername(username).map(UserEntity::toDomain);
+    }
+}
