@@ -1,7 +1,7 @@
 package dio.budgeting.application.input;
 
-public record CreateUserInput(
-        String username,
+public record AuthenticateUserUseCaseInput(
+        String userName,
         String password
 ) {
 }

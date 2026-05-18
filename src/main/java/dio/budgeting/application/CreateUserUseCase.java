@@ -12,11 +12,13 @@ public class CreateUserUseCase {
     private final UserRepository userRepository;
 
     public CreateUserUseCase(UserRepository userRepository) {
+
         this.userRepository = userRepository;
     }
 
     public UserOutput execute(CreateUserInput input) {
         var user = new User(input.username(), input.password());
+
         return UserOutput.from(userRepository.save(user));
     }
 }

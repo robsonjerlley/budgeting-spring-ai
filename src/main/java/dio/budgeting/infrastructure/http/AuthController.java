@@ -1,33 +1,31 @@
 package dio.budgeting.infrastructure.http;
 
-import dio.budgeting.domain.UserRepository;
+import dio.budgeting.application.AuthenticationUserUseCase;
 import dio.budgeting.infrastructure.http.request.LoginRequest;
 import dio.budgeting.infrastructure.http.response.TokenResponse;
-import dio.budgeting.infrastructure.identity.provider.JwtTokenProvider;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthController {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
+    private final AuthenticationUserUseCase authenticationUserUseCase;
 
-    public AuthController(JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.userRepository = userRepository;
+    public AuthController(AuthenticationUserUseCase authenticationUserUseCase) {
+        this.authenticationUserUseCase = authenticationUserUseCase;
     }
 
+
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
-        return userRepository.findByUsername(loginRequest.userName())
-                .filter(user -> user.getPassword().equals(loginRequest.password()))
-                .map(user -> {
-                    var token = jwtTokenProvider.generate(user.getUsername());
-                    return ResponseEntity.ok(new TokenResponse(user.getUsername(), token));
-                })
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    public ResponseEntity<TokenResponse> login(@RequestBody @Validated LoginRequest loginRequest) {
+
+        var output = authenticationUserUseCase.execute(loginRequest.toInput());
+
+        return ResponseEntity.ok(new TokenResponse(output.userName(), output.token()));
     }
 }

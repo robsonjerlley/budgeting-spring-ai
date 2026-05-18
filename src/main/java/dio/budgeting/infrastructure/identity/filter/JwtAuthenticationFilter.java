@@ -26,10 +26,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     @NullMarked
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain
+    ) throws ServletException, IOException
+    {
+
         var token = extractToken(request);
+
         if (token != null && jwtTokenProvider.isValid(token)) {
             var subject = jwtTokenProvider.extractSubject(token);
             var auth = new UsernamePasswordAuthenticationToken(subject, null, List.of());
@@ -37,6 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
+
+
 
     private String extractToken(HttpServletRequest request) {
         var header = request.getHeader("Authorization");

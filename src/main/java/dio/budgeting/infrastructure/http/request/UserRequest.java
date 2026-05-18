@@ -1,9 +1,16 @@
 package dio.budgeting.infrastructure.http.request;
 
 import dio.budgeting.application.input.CreateUserInput;
+import jakarta.validation.constraints.NotBlank;
 
-public record UserRequest(String username, String password) {
+public record UserRequest(
+        @NotBlank String userName,
+        @NotBlank String password
+) {
+
+
     public CreateUserInput toInput() {
-        return new CreateUserInput(username, password);
+
+        return new CreateUserInput(userName, password);
     }
 }

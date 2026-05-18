@@ -1,9 +1,15 @@
 package dio.budgeting.infrastructure.http.request;
 
-import lombok.NonNull;
+import dio.budgeting.application.input.AuthenticateUserUseCaseInput;
+import jakarta.validation.constraints.NotBlank;
 
 public record LoginRequest(
-        @NonNull String userName,
-        @NonNull String password
+        @NotBlank String userName,
+        @NotBlank String password
 ) {
+
+  public  AuthenticateUserUseCaseInput toInput(){
+        return new AuthenticateUserUseCaseInput(userName, password);
+    }
+
 }
