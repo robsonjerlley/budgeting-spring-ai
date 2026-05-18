@@ -3,7 +3,8 @@
     "allow": [
       "Bash(Get-ChildItem -Path \"D:\\\\aulas-praticas\\\\dio-spring-boot-learning-track-main\\\\dio-spring-boot-learning-track-main\\\\05-spring-ai\" -Recurse -Include \"*.java\", \"*.gradle\", \"*.xml\")",
       "Bash(Select-Object FullName)",
-      "Bash(Head -50)"
+      "Bash(Head -50)",
+      "PowerShell(head *)"
     ]
   }
 }
