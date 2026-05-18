@@ -7,13 +7,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Transaction {
     private TransactionId id;
+    private String userName;
     private String description;
     private long amount;
     private Category category;
 
-    public Transaction(String description, long amount, Category category) {
+    public Transaction(String userName, String description, long amount, Category category) {
         this.id = new TransactionId();
         this.description = description;
+        this.userName = userName;
         this.amount = amount;
         this.category = category;
     }

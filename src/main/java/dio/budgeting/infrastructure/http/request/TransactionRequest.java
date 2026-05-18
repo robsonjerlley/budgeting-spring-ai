@@ -11,7 +11,7 @@ public record TransactionRequest(
         long amount) {
 
 
-    public PersistTransactionInput toInput() {
-        return new PersistTransactionInput(description, amount, category);
+    public PersistTransactionInput toInput(String userName) {
+        return new PersistTransactionInput(userName,description, amount, category);
     }
 }

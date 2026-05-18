@@ -12,15 +12,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
-@RequestMapping("/pai/v1/transactions")
+@RequestMapping("/api/v1/transactions")
 public class TransactionController {
     private final PersistTransactionUseCase persistTransactionUseCase;
     private final ListTransactionsByCategoryUseCase listTransactionsByCategoryUseCase;
@@ -29,12 +32,15 @@ public class TransactionController {
     private final ChatClient chatClient;
     private final TextToSpeechModel textToSpeechModel;
 
-    public TransactionController(PersistTransactionUseCase persistTransactionUseCase,
-                                 ListTransactionsByCategoryUseCase listTransactionsByCategoryUseCase,
-                                 TranscriptionModel transcriptionModel,
-                                 @Value("classpath:prompts/system-message.st") Resource systemPrompt,
-                                 ChatClient.Builder chatClientBuilder,
-                                 TextToSpeechModel textToSpeechModel) throws IOException {
+    public TransactionController(
+            PersistTransactionUseCase persistTransactionUseCase,
+            ListTransactionsByCategoryUseCase listTransactionsByCategoryUseCase,
+            TranscriptionModel transcriptionModel,
+            @Value("classpath:prompts/system-message.st") Resource systemPrompt,
+            ChatClient.Builder chatClientBuilder,
+            TextToSpeechModel textToSpeechModel
+    ) throws IOException {
+
         this.persistTransactionUseCase = persistTransactionUseCase;
         this.listTransactionsByCategoryUseCase = listTransactionsByCategoryUseCase;
         this.transcriptionModel = transcriptionModel;
@@ -47,8 +53,11 @@ public class TransactionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TransactionResponse createTransaction(@RequestBody TransactionRequest request) {
-        var transaction = persistTransactionUseCase.execute(request.toInput());
+    public TransactionResponse createTransaction(
+            @RequestBody @Validated TransactionRequest request
+    ) {
+        var userName = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
+        var transaction = persistTransactionUseCase.execute(request.toInput(userName));
         return TransactionResponse.from(transaction);
     }
 

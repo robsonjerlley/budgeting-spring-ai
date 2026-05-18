@@ -20,6 +20,7 @@ import java.util.UUID;
 public class TransactionEntity {
     @Id
     private UUID id;
+    private String userName;
     private String description;
     private long amount;
 
@@ -29,6 +30,7 @@ public class TransactionEntity {
     public static TransactionEntity from(Transaction transaction) {
         return new TransactionEntity(
                 transaction.getId().uuid(),
+                transaction.getUserName(),
                 transaction.getDescription(),
                 transaction.getAmount(),
                 transaction.getCategory());
@@ -37,6 +39,7 @@ public class TransactionEntity {
     public Transaction toDomain() {
         return new Transaction(
                 new TransactionId(this.id),
+                this.userName,
                 this.description,
                 this.amount,
                 this.category
