@@ -47,18 +47,21 @@ public class JwtTokenProviderTest {
     @DisplayName("Deve validar token com sucesso")
     void shouldValidateToken(){
 
+        // Token válido
         var tokenValid =  provider.generate("josesilva");
         var result  =  provider.isValid(tokenValid);
 
         assertTrue(result);
         System.out.println(result);
 
+        // Token expirado
         var tokenExpired =  expiredProvider.generate("josesilva");
         Thread.sleep(2);
         var resultExpired =  expiredProvider.isValid(tokenExpired);
         assertFalse(resultExpired);
         System.out.println(resultExpired);
 
+        // Token não válido 
         var noToken = "nao-valido";
         assertFalse(provider.isValid(noToken));
 
