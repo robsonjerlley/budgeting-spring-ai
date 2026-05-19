@@ -27,6 +27,15 @@ Primary flow:
 - `src/main/java/dio/budgeting/infrastructure`
   - HTTP adapters, JPA adapters, and integration glue.
 
+## Autenticação e Segurança
+
+O projeto conta com um sistema de autenticação para proteger os endpoints da API.
+
+- **Cadastro de usuário** — qualquer pessoa pode criar uma conta via `POST /api/v1/users/create`. As senhas são armazenadas de forma segura com hashing, nunca em texto puro.
+- **Login** — usuários se autenticam via `POST /api/v1/auth/login` com suas credenciais. Em caso de sucesso, recebem um token que deve ser enviado nas próximas requisições.
+- **Rotas protegidas** — todos os demais endpoints exigem o token no cabeçalho da requisição. Requisições sem token válido são rejeitadas automaticamente com resposta 401.
+- **Sem sessão no servidor** — o servidor não armazena estado de sessão. Cada requisição é validada de forma independente pelo token, tornando a API adequada para ambientes escaláveis.
+
 ## Module-Specific Topics
 
 ### Speech-to-text
